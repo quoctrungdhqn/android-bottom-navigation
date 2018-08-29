@@ -2,6 +2,7 @@ package com.quoctrungdhqn.android_bottom_navigation;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -14,25 +15,28 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 
 public class MainActivity extends AppCompatActivity {
-    private FrameLayout fragmentContainer;
-    private AHBottomNavigation bottomNavigation;
+    private FrameLayout mFragmentContainer;
+    private AHBottomNavigation mBottomNavigation;
+    private Toolbar mToolbar;
+    private AppBarLayout mAppBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            toolbar.setTitle("Bottom Navigation");
+        mAppBarLayout = findViewById(R.id.app_bar_layout);
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (mToolbar != null) {
+            mToolbar.setTitle("Bottom Navigation");
         }
 
-        fragmentContainer = findViewById(R.id.frame_container);
+        mFragmentContainer = findViewById(R.id.frame_container);
 
-        bottomNavigation = findViewById(R.id.bottom_navigation);
+        mBottomNavigation = findViewById(R.id.bottom_navigation);
 
-        setUpBottomNavigation(bottomNavigation);
+        setUpBottomNavigation(mBottomNavigation);
 
         loadFragment(new StoreFragment());
 
@@ -44,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
 
+        loadAnimation(mFragmentContainer);
+    }
+
+    private void loadAnimation(FrameLayout fragmentContainer) {
         if (fragmentContainer != null) {
             Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
             fragmentContainer.startAnimation(fadeIn);
@@ -57,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set background color
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#F2F2F2"));
-        bottomNavigation.setBehaviorTranslationEnabled(true);
+        bottomNavigation.setBehaviorTranslationEnabled(false);
 
         // Change colors
         bottomNavigation.setAccentColor(Color.parseColor("#FF4081"));
@@ -79,24 +87,45 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTabSelected(int position, boolean wasSelected) {
                 switch (position) {
                     case 0:
-                        fragment = new StoreFragment();
-                        loadFragment(fragment);
+                        mAppBarLayout.setExpanded(true);
+                        if (wasSelected) {
+                            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_container);
+                            if (fragment instanceof StoreFragment) {
+                                ((StoreFragment) fragment).refresh();
+                            }
+                        } else {
+                            fragment = new StoreFragment();
+                            loadFragment(fragment);
+                        }
                         break;
                     case 1:
-                        fragment = new GiftsFragment();
-                        loadFragment(fragment);
+                        mAppBarLayout.setExpanded(true);
+                        if (!wasSelected) {
+                            fragment = new GiftsFragment();
+                            loadFragment(fragment);
+                        }
                         break;
                     case 2:
-                        fragment = new CartFragment();
-                        loadFragment(fragment);
+                        mAppBarLayout.setExpanded(true);
+                        if (!wasSelected) {
+                            fragment = new CartFragment();
+                            loadFragment(fragment);
+                        }
+
                         break;
                     case 3:
-                        fragment = new ProfileFragment();
-                        loadFragment(fragment);
+                        mAppBarLayout.setExpanded(true);
+                        if (!wasSelected) {
+                            fragment = new ProfileFragment();
+                            loadFragment(fragment);
+                        }
                         break;
                     case 4:
-                        fragment = new SettingFragment();
-                        loadFragment(fragment);
+                        mAppBarLayout.setExpanded(true);
+                        if (!wasSelected) {
+                            fragment = new SettingFragment();
+                            loadFragment(fragment);
+                        }
                         break;
                 }
                 return true;

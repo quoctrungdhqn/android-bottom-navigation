@@ -27,7 +27,7 @@ public class StoreFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         ArrayList<String> itemsData = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             itemsData.add("Product " + i);
         }
 
